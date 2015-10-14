@@ -2,6 +2,7 @@ window.onload = function() {
   console.log("Website loaded and linked.");
 
   Game.makeDeck();
+  Game.deck.shuffle(Game.deck.cards);
 };
 
 
@@ -23,10 +24,12 @@ var Game = function(){
       this.cards = [];
 
       //member functions:
-      this.shuffle = function(){
+      this.shuffle = function(o){
         //This function will shuffle the cards in the deck.
-        //shuffle function expanded from memory.
+        //shuffle function taken from memory game.
         console.log('shuffling');
+        for(var j, x, i = o.length; i; j = Math.floor(Math.random() * i), x = o[--i], o[i] = o[j], o[j] = x);
+      		return o;
       }
       this.build = function(){
         //This function will populate the deck with cards.
@@ -50,3 +53,9 @@ var Game = function(){
     },
   }
 }();
+
+// USE THIS TO SHUFFLE YOUR ARRAYS
+function shuffle(o) {
+	for(var j, x, i = o.length; i; j = Math.floor(Math.random() * i), x = o[--i], o[i] = o[j], o[j] = x);
+		return o;
+};
