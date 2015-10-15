@@ -64,7 +64,7 @@ var Game = function(){
 
       console.log('Cards dealt');
 
-      Game.render();
+      Game.render.players();
     },
 
     makeDeck: function() {
@@ -85,7 +85,6 @@ var Game = function(){
       for (var i = 0; i < 6; i++) {
         hand.push(deck.cards.pop());
         $('#draw li:last').remove();
-
       }
       //When dealing, the card after the hands are deal dictates the trump.
       //This card is then placed at the very end of the deck.
@@ -98,14 +97,20 @@ var Game = function(){
 
       return hand;
     },
-    render: function() {
+    render: {
+
+      players: function(){
       //render players hands:
-      for (var i = 0; i < 6; i++) {
+      for (var i = 0; i < Game.players[0].hand.length; i++) {
         $('#one > .table').append($('<li/>').append(Game.players[0].hand[i].jqCard));
+
+      }
+      for (var i = 0; i < Game.players[1].hand.length; i++) {
         $('#two > .table').append($('<li/>').append(Game.players[1].hand[i].jqCard));
       }
       //Say what the trump suit is:
       $('.trump').html('<h3>The trump suit is '+Game.trumpSuit+ '.</h3>');
+    }
     }
   }
 }();
@@ -132,6 +137,9 @@ var Game = function(){
   this.draw = function() {
     //draws a card fromt he deck and adds to the hand.
     console.log('drawing a card');
+    $('#draw li:last').remove();
+    this.hand.push(Game.deck.cards.pop());
+    Game.render.players();
   }
 };
 
@@ -159,14 +167,10 @@ var Game = function(){
   this.build = function(){
     //This function will populate the deck with cards.
     console.log('building deck');
-
     var rank = '';
-
     var suits = ['diams','hearts','spades','clubs'];
     for (var j=0; j < suits.length; j++) {
-
       for (var i=6; i < 15; i++){
-
           switch(i) {
             case 11 :
               rank = 'j';
