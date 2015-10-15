@@ -3,25 +3,18 @@ window.onload = function() {
 
   var myDataRef = new Firebase('https://durak-card-game.firebaseio.com/');
 
+  cleanup(myDataRef); //refreshes the DB on every new run
+
   Game.start();
 
 
-  var player1Ref = myDataRef.push();
-  player1Ref.set(Game.players[0].state);
-
-  var player2Ref = myDataRef.push();
-  player2Ref.set(Game.players[1].state);
+myDataRef.set(Game.getState());
 
 
-//   myDataRef.set({
-//   title: "Hello World!",
-//   author: "Firebase",
-//   location: {
-//     city: "San Francisco",
-//     state: "California",
-//     zip: 94103
-//   }
-// });
+  myDataRef.child("deck/0/number").on("value", function(snapshot) {
+    alert(snapshot.val());  // Alerts "San Francisco"
+  });
+  //debugger;
 
 };
 
@@ -38,6 +31,15 @@ var Game = function(){
     deck: null,
     trumpSuit: '',
     players: [],
+
+    getState: function() {
+      return {
+        deck: Game.deck.cards,
+        trumpSuit: Game.trumpSuit,
+        player1: Game.players[0].state,
+        player2: Game.players[1].state,
+      }
+    },
 
     getTurn: function() {
       return turn;
@@ -154,3 +156,7 @@ var Game = function(){
     }
   }
 };
+
+function cleanup(reference) {
+  reference.remove();
+}
