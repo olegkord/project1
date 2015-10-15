@@ -54,6 +54,7 @@ var Game = function(){
           alert('something went wrong in setTurn!');
       }
     },
+
     start: function() {
       Game.makeDeck();
       Game.deck.shuffle(Game.deck.cards);
@@ -81,6 +82,7 @@ var Game = function(){
 
       for (var i = 0; i < 6; i++) {
         hand.push(deck.cards.pop());
+        $('#draw li:last').remove();
       }
       //When dealing, the card after the hands are deal dictates the trump.
       //This card is then placed at the very end of the deck.
@@ -92,6 +94,9 @@ var Game = function(){
       console.log('Deck now has '+ deck.cards.length + ' cards');
 
       return hand;
+    },
+    render: function() {
+
     }
   }
 }();
@@ -170,9 +175,12 @@ var Game = function(){
               rank = toString(i);
           }
 
+          //Builds the cards using jquery based on the CSS for the cards.
           var cardOuter = $('<div/>').addClass('card rank-'+rank +' '+suits[j]);
           cardOuter.append($('<div/>').addClass('rank').html(rank.toUpperCase()));
           cardOuter.append($('<div/>').addClass(suits[j]).html(suits[j]));
+
+          var drawDeck = $('.deck#draw').append($('<li/>').html('<div class=\"card back\">*</div>'));
 
           this.cards.push(new Card(suits[j],i,cardOuter));
         }

@@ -17,6 +17,12 @@ header {
   margin: 0 auto;
 }
 
-#one {
-  
+#draw{
+  margin: 200px 60px;
+}
+
+#table {
+  background-color: lightgreen;
+  height: 500px;
+  width: 1000px;
 }
