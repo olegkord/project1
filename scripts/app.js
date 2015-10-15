@@ -2,7 +2,6 @@ window.onload = function() {
   console.log("Website loaded and linked.");
 
   Game.start();
-  debugger;
 
 };
 
@@ -14,7 +13,6 @@ var Game = function(){
   console.log('Game made');
 
   var turn = 1;
-
 
   return {
     deck: null,
@@ -40,13 +38,14 @@ var Game = function(){
       Game.makeDeck();
       Game.deck.shuffle(Game.deck.cards);
 
-      Game.players[0] = new Game.Player(1,Game.deal(Game.deck));
-      Game.players[1] = new Game.Player(2,Game.deal(Game.deck));
+      Game.players[0] = new Game.Player(1,Game.deal(Game.deck),'human');
+      Game.players[1] = new Game.Player(2,Game.deal(Game.deck),'computer');
 
       console.log('Cards dealt');
     },
 
     makeDeck: function() {
+      //Initiates a new deck object and fills it with cards.
       Game.deck = new Game.Deck();
       Game.deck.build();
     },
@@ -63,7 +62,6 @@ var Game = function(){
       for (var i = 0; i < 7; i++) {
         hand.push(deck.cards.pop());
       }
-
       //When dealing, the card after the hands are deal dictates the trump.
       //This card is then placed at the very end of the deck.
       //Because we are "drawing" from the end of the Array we pop and push.
@@ -111,9 +109,11 @@ var Game = function(){
       this.number = number;
     },
 
-    Player: function(number,hand) {
+    Player: function(number,hand,operator) {
+      //Constructor for a Player object
       this.number = number;
       this.hand = hand;
+      this.operator = operator; //operator may be human or computer.
 
       this.play = function(card) {
         //function plays a card from the hand in a turn
