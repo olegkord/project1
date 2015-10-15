@@ -7,10 +7,11 @@ window.onload = function() {
 
 
   var player1Ref = myDataRef.push();
-  player1Ref.set(Game.players[0].hand);
+  player1Ref.set(Game.players[0].state);
 
   var player2Ref = myDataRef.push();
-  player2Ref.set(Game.players[1].hand);
+  player2Ref.set(Game.players[1].state);
+
 
 //   myDataRef.set({
 //   title: "Hello World!",
@@ -102,6 +103,12 @@ var Game = function(){
   this.number = number;
   this.hand = hand;
   this.operator = operator; //operator may be human or computer.
+
+  this.state = {
+    number: number,
+    hand: hand,
+    operator: operator,
+  }
 
   this.play = function(card) {
     //function plays a card from the hand in a turn
