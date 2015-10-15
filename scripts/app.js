@@ -101,9 +101,11 @@ var Game = function(){
     render: function() {
       //render players hands:
       for (var i = 0; i < 6; i++) {
-        $('#one > .hand > li').append(Game.players[0].hand[i].jqCard);
-        $('#two > .hand > li').append(Game.players[1].hand[i].jqCard);
+        $('#one > .table').append($('<li/>').append(Game.players[0].hand[i].jqCard));
+        $('#two > .table').append($('<li/>').append(Game.players[1].hand[i].jqCard));
       }
+      //Say what the trump suit is:
+      $('.trump').html('<h3>The trump suit is '+Game.trumpSuit+ '.</h3>');
     }
   }
 }();
@@ -185,7 +187,7 @@ var Game = function(){
           //Builds the cards using jquery based on the CSS for the cards.
 
           var rankStr = 'rank-'+rank;
-          var suitsSym = '&'+suits[j]+';';
+          var suitsSym = '\n&'+suits[j]+';';
           var cardOuter = $('<a/>').addClass('card').addClass(rankStr).addClass(suits[j]);
           cardOuter.append($('<span/>').addClass('rank').html(rank.toUpperCase()));
           cardOuter.append($('<span/>').addClass(suits[j]).html(suitsSym));
