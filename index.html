@@ -8,24 +8,30 @@
     <title></title>
   </head>
   <body>
-    <div class = "container">
-      <div class = "player-hand" id=1>
-        This is player 1 Area 
-      </div>
-      <div class = "deck">
-        The deck will go here
-      </div>
-      <div class = "player-hand" id=2>
-        This is player 2 area
-      </div>
-      <div class = "playingCards simpleCards inText">
-        <div class="card rank-2 diams">
-          <span class="rank">2</span>
-          <span class="suit">&diams;</span>
-        </div>
-      </div>
+    <header></header>
+      <div class="playingCards simpleCards" style="background-color: lightgreen">
 
-    </div>
+          <ul class="deck">
+            <!-- will get dynamically created -->
+            <li><div class="card back">*</div></li>
+            <li><div class="card back">*</div></li>
+            <li><div class="card back">*</div></li>
+            <li><div class="card back">*</div></li>
+            <li><div class="card back">*</div></li>
+            <li><div class="card back">*</div></li>
+            <li><div class="card back">*</div></li>
+          </ul>
+
+        <div class="player" id="one">Player 1</div>
+        <div class="player" id="two">Player 2</div>
+
+          <ul class="deck" id="discard">
+
+          </ul>
+
+
+
+      </div>
     <script src="https://cdn.firebase.com/js/client/2.2.1/firebase.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
     <script src="scripts/app.js"></script>

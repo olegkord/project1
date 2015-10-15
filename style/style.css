@@ -2,8 +2,21 @@ div {
   border: solid black 2px;
 }
 
+header {
+  height: 200px;
+}
+
 .container {
-  width: 1000px;
-  height: 500px;
-  background-color: lightgreen;
+  width: 100px;
+  height: 200px;
+}
+
+.player {
+  width: 200px;
+  height: 50px;
+  margin: 0 auto;
+}
+
+#one {
+  
 }

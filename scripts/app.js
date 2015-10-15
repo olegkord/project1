@@ -11,14 +11,12 @@ window.onload = function() {
 myDataRef.set(Game.getState());
 
 
-  myDataRef.child("deck/0/number").on("value", function(snapshot) {
-    alert(snapshot.val());  // Alerts "San Francisco"
-  });
+  // myDataRef.child("deck/0/number").on("value", function(snapshot) {
+  //   alert(snapshot.val());  // Alerts "San Francisco"
+  // });
   //debugger;
 
 };
-
-
 
 var Game = function(){
   //This game module is created on start. This will contain all the objects in the game.
@@ -123,11 +121,12 @@ var Game = function(){
   }
 };
 
- function Card(suit,number) {
+ function Card(suit,number,jqObj) {
   //constructor of Card object.
   //expected inputs: suit (str), number = num
   this.suit = suit;
   this.number = number;
+  this.jqCard = jqObj;
 };
 
  function Deck() {
@@ -146,15 +145,42 @@ var Game = function(){
   this.build = function(){
     //This function will populate the deck with cards.
     console.log('building deck');
+
+    var rank = '';
+
     var suits = ['diams','hearts','spades','clubs'];
     for (var j=0; j < suits.length; j++) {
 
       for (var i=6; i < 15; i++){
 
-        this.cards.push(new Card(suits[j],i));
+          switch(i) {
+            case 11 :
+              rank = 'j';
+              break;
+            case 12 :
+              rank = 'q';
+              break;
+            case 13 :
+              rank = 'k';
+              break;
+            case 14 :
+              rank = 'a';
+              break;
+            default :
+              rank = toString(i);
+          }
+
+          var cardOuter = $('<div/>').addClass('card rank-'+rank +' '+suits[j]);
+          cardOuter.append($('<div/>').addClass('rank').html(rank.toUpperCase()));
+          cardOuter.append($('<div/>').addClass(suits[j]).html(suits[j]));
+
+          this.cards.push(new Card(suits[j],i,cardOuter));
+        }
       }
+
+      //fun with Jquery:
+      //cards will be divs.
     }
-  }
 };
 
 function cleanup(reference) {
