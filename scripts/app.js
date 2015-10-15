@@ -43,6 +43,7 @@ var Game = function(){
       return turn;
     },
     setTurn: function(currentTurn) {
+      console.log('SETTING NEW TURN!!');
       switch (currentTurn) {
         case 1:
           turn = 2;
@@ -83,6 +84,7 @@ var Game = function(){
       var hand = [];
 
       for (var i = 0; i < 6; i++) {
+        //Players have not yet been created yet, so this is necessary.
         hand.push(deck.cards.pop());
         $('#draw li:last').remove();
       }
@@ -97,20 +99,43 @@ var Game = function(){
 
       return hand;
     },
-    render: {
 
+    makePlay: function(jqReference){
+      var cardRank = parseInt(jqReference.children().attr('data-value'));
+      var cardSuit = jqReference.children().attr('class');
+      cardSuit = cardSuit.split(' ');
+      cardSuit = cardSuit[cardSuit.length-1];
+      console.log('Playas gonna play');
+      Game.setTurn(Game.getTurn());
+      Game.render.players();
+    },
+    render: {
       players: function(){
       //render players hands:
       for (var i = 0; i < Game.players[0].hand.length; i++) {
         $('#one > .table').append($('<li/>').append(Game.players[0].hand[i].jqCard));
-
       }
       for (var i = 0; i < Game.players[1].hand.length; i++) {
         $('#two > .table').append($('<li/>').append(Game.players[1].hand[i].jqCard));
       }
+
+      //Every time game is refreshed, update event listeners.
+      if (Game.getTurn()===1){
+        $('#one > .table > li').click(function(){
+          Game.makePlay($(this));
+        })
+        $('#two > .table > li').off('click');
+      }
+      else if (Game.getTurn()===2) {
+        $('#two > .table > li').click(function(){
+          Game.makePlay($(this));
+        })
+        $('#one > .table > li').off('click');
+      }
+
       //Say what the trump suit is:
       $('.trump').html('<h3>The trump suit is '+Game.trumpSuit+ '.</h3>');
-    }
+      }
     }
   }
 }();
@@ -129,17 +154,14 @@ var Game = function(){
     operator: operator,
   }
 
-  this.play = function(card) {
-    //function plays a card from the hand in a turn
-    console.log('playing a card');
-  }
-
   this.draw = function() {
     //draws a card fromt he deck and adds to the hand.
     console.log('drawing a card');
-    $('#draw li:last').remove();
-    this.hand.push(Game.deck.cards.pop());
-    Game.render.players();
+      if (Game.deck.cards.length != 0) {
+      $('#draw li:last').remove();
+      this.hand.push(Game.deck.cards.pop());
+      Game.render.players();
+    }
   }
 };
 
@@ -191,8 +213,8 @@ var Game = function(){
           //Builds the cards using jquery based on the CSS for the cards.
 
           var rankStr = 'rank-'+rank;
-          var suitsSym = '\n&'+suits[j]+';';
-          var cardOuter = $('<a/>').addClass('card').addClass(rankStr).addClass(suits[j]);
+          var suitsSym = '\n&'+suits[j]+';\n';
+          var cardOuter = $('<a/>').addClass('card').addClass(rankStr).addClass(suits[j]).attr('data-value',i);
           cardOuter.append($('<span/>').addClass('rank').html(rank.toUpperCase()));
           cardOuter.append($('<span/>').addClass(suits[j]).html(suitsSym));
 
