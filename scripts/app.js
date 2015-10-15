@@ -63,6 +63,8 @@ var Game = function(){
       Game.players[1] = new Player(2,Game.deal(Game.deck),'computer');
 
       console.log('Cards dealt');
+
+      Game.render();
     },
 
     makeDeck: function() {
@@ -83,6 +85,7 @@ var Game = function(){
       for (var i = 0; i < 6; i++) {
         hand.push(deck.cards.pop());
         $('#draw li:last').remove();
+
       }
       //When dealing, the card after the hands are deal dictates the trump.
       //This card is then placed at the very end of the deck.
@@ -96,7 +99,11 @@ var Game = function(){
       return hand;
     },
     render: function() {
-
+      //render players hands:
+      for (var i = 0; i < 6; i++) {
+        $('#one > .hand > li').append(Game.players[0].hand[i].jqCard);
+        $('#two > .hand > li').append(Game.players[1].hand[i].jqCard);
+      }
     }
   }
 }();
@@ -172,13 +179,16 @@ var Game = function(){
               rank = 'a';
               break;
             default :
-              rank = toString(i);
+              rank = i.toString();
           }
 
           //Builds the cards using jquery based on the CSS for the cards.
-          var cardOuter = $('<div/>').addClass('card rank-'+rank +' '+suits[j]);
-          cardOuter.append($('<div/>').addClass('rank').html(rank.toUpperCase()));
-          cardOuter.append($('<div/>').addClass(suits[j]).html(suits[j]));
+
+          var rankStr = 'rank-'+rank;
+          var suitsSym = '&'+suits[j]+';';
+          var cardOuter = $('<a/>').addClass('card').addClass(rankStr).addClass(suits[j]);
+          cardOuter.append($('<span/>').addClass('rank').html(rank.toUpperCase()));
+          cardOuter.append($('<span/>').addClass(suits[j]).html(suitsSym));
 
           var drawDeck = $('.deck#draw').append($('<li/>').html('<div class=\"card back\">*</div>'));
 

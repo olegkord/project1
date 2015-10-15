@@ -10,23 +10,26 @@
   <body>
     <header></header>
       <div class="playingCards simpleCards" id="table">
-
+        <div class="player" id="two">
+          <ul class="hand">
+            <li></li>
+          </ul>
+        </div>
           <ul class="deck" id="draw">
             <!-- will get dynamically created -->
-
           </ul>
 
-        <div class="player" id="one">Player 1</div>
-        
-        <div class="player" id="two">Player 2</div>
+        <div class="player" id="one">
+          <ul class="hand">
+            <li></li>
+          </ul>
+        </div>
 
           <ul class="deck" id="discard">
-
+            <li></li>
           </ul>
-
-
-
       </div>
+      <footer></footer>
     <script src="https://cdn.firebase.com/js/client/2.2.1/firebase.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
     <script src="scripts/app.js"></script>
