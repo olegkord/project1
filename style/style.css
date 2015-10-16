@@ -17,8 +17,13 @@ footer {
 .player {
   Width: 1020px;
   height: 30px;
-  margin: 0 auto;
+
   min-width: 600px;
+  margin-left: 250px;
+}
+
+.deck {
+  float: left;
 }
 
 
@@ -36,5 +41,9 @@ footer {
 }
 
 #one {
-  margin-top: 250px;
+  margin-top: 200px;
+}
+
+#field {
+  margin-top: 200px;
 }

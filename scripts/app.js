@@ -52,7 +52,7 @@ var Game = function(){
           turn = 1;
           break;
         default:
-          alert('something went wrong in setTurn!');
+          alert('something went wrong in setTurn.');
       }
     },
 
@@ -100,14 +100,21 @@ var Game = function(){
       return hand;
     },
 
-    makePlay: function(jqReference){
-      var cardRank = parseInt(jqReference.children().attr('data-value'));
-      var cardSuit = jqReference.children().attr('class');
+    makeAttack: function(jqReference){
+      //Every other turn a player attacks the other player with a card.
+      var cardRank = parseInt(jqReference.attr('data-value'));
+      var cardSuit = jqReference.attr('class');
       cardSuit = cardSuit.split(' ');
       cardSuit = cardSuit[cardSuit.length-1];
+
+      jqReference.parent().remove();
       console.log('Playas gonna play');
       Game.setTurn(Game.getTurn());
       Game.render.players();
+    },
+
+    makeDefend: function(jqReference) {
+      //When attacked, the other player must defend with a card of his choosing.
     },
     render: {
       players: function(){
@@ -122,19 +129,19 @@ var Game = function(){
       //Every time game is refreshed, update event listeners.
       if (Game.getTurn()===1){
         $('#one > .table > li').click(function(){
-          Game.makePlay($(this));
+          Game.makeAttack($(this).children());
         })
         $('#two > .table > li').off('click');
       }
       else if (Game.getTurn()===2) {
         $('#two > .table > li').click(function(){
-          Game.makePlay($(this));
+          Game.makeAttack($(this).children());
         })
         $('#one > .table > li').off('click');
       }
 
       //Say what the trump suit is:
-      $('.trump').html('<h3>The trump suit is '+Game.trumpSuit+ '.</h3>');
+      $('.trump').html('<h2>The trump suit is &'+Game.trumpSuit+ ';.</h2>');
       }
     }
   }
@@ -161,6 +168,7 @@ var Game = function(){
       $('#draw li:last').remove();
       this.hand.push(Game.deck.cards.pop());
       Game.render.players();
+      console.log('Deck now has '+ Game.deck.cards.length + ' cards');
     }
   }
 };
