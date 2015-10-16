@@ -2,8 +2,48 @@ div {
   border: solid black 2px;
 }
 
+header {
+  height: 200px;
+}
+footer {
+  height: 200px;
+}
+
 .container {
-  width: 1000px;
-  height: 500px;
+  width: 100px;
+  height: 200px;
+}
+
+.player {
+  Width: 1020px;
+  height: 30px;
+
+  min-width: 600px;
+  margin-left: 250px;
+}
+
+.deck {
+  float: left;
+}
+
+
+#draw{
+  margin: 60px 10px;
+  border: solid black 2px;
+  width: 0px;
+}
+
+#table {
   background-color: lightgreen;
+  height: 1000px;
+  width: 1600px;
+  min-width: 600px;
+}
+
+#one {
+  margin-top: 200px;
+}
+
+#field {
+  margin-top: 200px;
 }
