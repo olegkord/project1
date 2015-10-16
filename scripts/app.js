@@ -1,15 +1,15 @@
 window.onload = function() {
   console.log("Website loaded and linked.");
 
-  var myDataRef = new Firebase('https://durak-card-game.firebaseio.com/');
-  cleanup(myDataRef); //refreshes the DB on every new run
+  // var myDataRef = new Firebase('https://durak-card-game.firebaseio.com/');
+  // cleanup(myDataRef); //refreshes the DB on every new run
 
   RegisterListeners.setEvents();
 
   Game.start();
 
 
-myDataRef.set(Game.getState());
+//myDataRef.set(Game.getState());
 
 
   // myDataRef.child("deck/0/number").on("value", function(snapshot) {
@@ -92,7 +92,7 @@ var Game = function(){
       //When dealing, the card after the hands are deal dictates the trump.
       //This card is then placed at the very end of the deck.
       //Because we are "drawing" from the end of the Array we pop and push.
-      Game.trumpSuit = Game.deck.cards[Game.deck.cards.length-1].suit;
+      Game.trumpSuit = Game.deck.cards[Game.deck.cards.length-1].getSuit();
 
       Game.deck.cards.push(Game.deck.cards.pop());
 
@@ -184,8 +184,6 @@ var Game = function(){
         $('#one > .table > li').click(function(){
           Game.makeAttack($(this).children());
         })
-
-
         //  MAYBE HERE SET AN EVENT LISTENER INSIDE MAKE ATTACK!!?!?!?
         $('#two > .table > li').off('click');
       }
@@ -229,12 +227,15 @@ var Game = function(){
   }
 };
 
- function Card(suit,number,jqObj) {
+ function Card(jqObj) {
   //constructor of Card object.
   //expected inputs: suit (str), number = num
-  this.suit = suit;
-  this.number = number;
+
   this.jqCard = jqObj;
+
+  this.getSuit = function() {
+    return this.jqCard.attr('class').split(' ')[this.jqCard.attr('class').split(' ').length-1];
+  }
 };
 
  function Deck() {
@@ -256,7 +257,7 @@ var Game = function(){
     var rank = '';
     var suits = ['diams','hearts','spades','clubs'];
     for (var j=0; j < suits.length; j++) {
-      for (var i=6; i < 15; i++){
+      for (var i=6; i < 15; i++) {
           switch(i) {
             case 11 :
               rank = 'j';
@@ -284,7 +285,7 @@ var Game = function(){
 
           var drawDeck = $('.deck#draw').append($('<li/>').html('<div class=\"card back\">*</div>'));
 
-          this.cards.push(new Card(suits[j],i,cardOuter));
+          this.cards.push(new Card(cardOuter));
         }
       }
 
