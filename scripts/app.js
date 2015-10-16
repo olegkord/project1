@@ -107,10 +107,10 @@ var Game = function(){
       cardSuit = cardSuit.split(' ');
       cardSuit = cardSuit[cardSuit.length-1];
 
-      jqReference.parent().remove();
+      $('#field > ul').append(jqReference.parent());
       console.log('Playas gonna play');
       Game.setTurn(Game.getTurn());
-      Game.render.players();
+      //Game.render.players();
     },
 
     makeDefend: function(jqReference) {
@@ -131,6 +131,8 @@ var Game = function(){
         $('#one > .table > li').click(function(){
           Game.makeAttack($(this).children());
         })
+
+        //  MAYBE HERE SET AN EVENT LISTENER INSIDE MAKE ATTACK!!?!?!?
         $('#two > .table > li').off('click');
       }
       else if (Game.getTurn()===2) {
