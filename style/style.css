@@ -17,8 +17,15 @@ footer {
 }
 
 .player {
-
   height: 30px;
+  margin-bottom: 200px;
+}
+
+.field {
+  margin-top:200px;
+  margin-left: -180px;
+  width:50px;
+  display: inline-block;
 }
 
 #draw{
@@ -34,14 +41,4 @@ footer {
   width: 1200px;
   margin-left: 30px;
   /*min-width: 600px;*/
-}
-
-#field {
-  margin: 0;
-  width:30px;
-  display: inline-block;
-}
-
-#one {
-  margin-top: 400px;
 }

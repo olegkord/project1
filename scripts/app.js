@@ -104,13 +104,14 @@ var Game = function(){
       //Every other turn a player attacks the other player with a card.
       var cardRank = parseInt(jqReference.attr('data-value'));
 
-
-
       var cardSuit = jqReference.attr('class');
       cardSuit = cardSuit.split(' ');
       cardSuit = cardSuit[cardSuit.length-1];
 
-      $('#field > ul').append(jqReference.parent());
+      //player field already exists.
+      $('.player#field').append($('<ul/>').addClass('hand').append(jqReference.parent()));
+
+
       console.log('Playas gonna play');
 
       if (Game.getTurn() === 1) {
@@ -145,12 +146,12 @@ var Game = function(){
         if ((atkCardSuit === defCardSuit) &&
         (parseInt(jqRefAttackCard.attr('data-value')) < parseInt(jqRefChosenCard.attr('data-value')))) {
           console.log('correct card selected');
-          $('#field > ul').append(jqRefChosenCard.parent());
+          $('.player#field > .hand').append(jqRefChosenCard.parent());
 
         }
         else if (defCardSuit === Game.trumpSuit) {
           console.log('correct card selected');
-          $('#field > ul').append(jqRefChosenCard.parent());
+          $('.player#field > .hand').append(jqRefChosenCard.parent());
         }
         else {
           alert('choose another card!');
