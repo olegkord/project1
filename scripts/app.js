@@ -103,18 +103,59 @@ var Game = function(){
     makeAttack: function(jqReference){
       //Every other turn a player attacks the other player with a card.
       var cardRank = parseInt(jqReference.attr('data-value'));
+
+
+
       var cardSuit = jqReference.attr('class');
       cardSuit = cardSuit.split(' ');
       cardSuit = cardSuit[cardSuit.length-1];
 
       $('#field > ul').append(jqReference.parent());
       console.log('Playas gonna play');
-      Game.setTurn(Game.getTurn());
+
+      if (Game.getTurn() === 1) {
+        //if Player 1 just attacked, prevent him from going again.
+//------->MODIFIY WITH MORE ADVANCED RULES LATER!!!
+
+      //Switch event listeners to allow other player to respond to the attack.
+        $('#one > .table > li').off('click');
+        $('#two > .table > li').click(function(){
+          Game.makeDefend(jqReference,$(this).children());
+        })
+      }
+//SWITCH TURN AFTER DEFENCE IS DONE.
+//------->Game.setTurn(Game.getTurn());
+
       //Game.render.players();
     },
 
-    makeDefend: function(jqReference) {
+    makeDefend: function(jqRefAttackCard,jqRefChosenCard) {
       //When attacked, the other player must defend with a card of his choosing.
+      //Inputs: attacking card (from Game.makeAttack()) and card selected by the player to defend.
+
+      var atkCardSuit = jqRefAttackCard.attr('class');
+      atkCardSuit = atkCardSuit.split(' ');
+      atkCardSuit = atkCardSuit[atkCardSuit.length-1];
+
+      var defCardSuit = jqRefChosenCard.attr('class');
+      defCardSuit = defCardSuit.split(' ');
+      defCardSuit = defCardSuit[defCardSuit.length-1];
+
+      if (atkCardSuit != Game.trumpSuit) {
+        if ((atkCardSuit === defCardSuit) &&
+        (parseInt(jqRefAttackCard.attr('data-value')) < parseInt(jqRefChosenCard.attr('data-value')))) {
+          console.log('correct card selected');
+          $('#field > ul').append(jqRefChosenCard.parent());
+
+        }
+        else if (defCardSuit === Game.trumpSuit) {
+          console.log('correct card selected');
+          $('#field > ul').append(jqRefChosenCard.parent());
+        }
+        else {
+          alert('choose another card!');
+        }
+      }
     },
     render: {
       players: function(){
@@ -131,6 +172,7 @@ var Game = function(){
         $('#one > .table > li').click(function(){
           Game.makeAttack($(this).children());
         })
+
 
         //  MAYBE HERE SET AN EVENT LISTENER INSIDE MAKE ATTACK!!?!?!?
         $('#two > .table > li').off('click');
