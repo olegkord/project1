@@ -141,7 +141,7 @@ var Game = function(){
       }
 
       //Say what the trump suit is:
-      $('.trump').html('<h2>The trump suit is &'+Game.trumpSuit+ ';.</h2>');
+      $('.trump').html('<h1>The trump suit is &'+Game.trumpSuit+ ';</h1>');
       }
     }
   }
