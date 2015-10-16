@@ -2,8 +2,9 @@ window.onload = function() {
   console.log("Website loaded and linked.");
 
   var myDataRef = new Firebase('https://durak-card-game.firebaseio.com/');
-
   cleanup(myDataRef); //refreshes the DB on every new run
+
+  RegisterListeners.setEvents();
 
   Game.start();
 
@@ -146,7 +147,6 @@ var Game = function(){
         if (parseInt(jqRefAttackCard.attr('data-value')) < parseInt(jqRefChosenCard.attr('data-value'))) {
 //-->Defending player has beaten the attacking card.
         $('.player#field > .hand').append(jqRefChosenCard.parent());
-        Game.recover();
         }
         else {
           alert('choose another card!');
@@ -155,7 +155,6 @@ var Game = function(){
       else if (defCardSuit === Game.trumpSuit) {
 //-->Defending player has beaten the attacking card.
         $('.player#field > .hand').append(jqRefChosenCard.parent());
-        Game.recover();
       }
       else {
         alert('choose another card!');
@@ -163,6 +162,12 @@ var Game = function(){
     },
     recover: function() {
       console.log('recovering from turn');
+
+      for (var i = 1; i < 3; i++){
+        while (Game.players[i].hand.length > 7) {
+          Game.players[i].draw();
+        }
+      }
     },
     render: {
       players: function(){
@@ -291,3 +296,22 @@ var Game = function(){
 function cleanup(reference) {
   reference.remove();
 }
+
+var RegisterListeners = function() {
+
+  return {
+    setEvents: function() {
+      $('.discard').click(function(){
+//----->THIS CONDITION WILL CHANGE!!
+        console.log('discarding cards to discard deck');
+        if ($('#field > .hand').children().length > 1) {
+          $('.deck#discard').append($('#field > .hand').children());
+          Game.recover();
+        }
+        else {
+          alert('Insufficient cards are in play!!');
+        }
+      })
+    },
+  }
+}();
