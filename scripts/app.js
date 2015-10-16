@@ -67,6 +67,7 @@ var Game = function(){
       console.log('Cards dealt');
 
       Game.render.players();
+      Game.render.listeners();
     },
 
     makeDeck: function() {
@@ -112,16 +113,19 @@ var Game = function(){
       //player field already exists.
       $('.player#field').append($('<ul/>').addClass('hand').append(jqReference.parent()));
 
-
-      console.log('Playas gonna play');
-
       if (Game.getTurn() === 1) {
         //if Player 1 just attacked, prevent him from going again.
 //------->MODIFIY WITH MORE ADVANCED RULES LATER!!!
 
       //Switch event listeners to allow other player to respond to the attack.
-        $('#one > .table > li').off('click');
-        $('#two > .table > li').click(function(){
+        $('#one > .table').children().off('click');
+        $('#two > .table').children().click(function(){
+          Game.makeDefend(jqReference,$(this).children());
+        })
+      }
+      else if (Game.getTurn() === 2) {
+        $('#two > .table > li').off('click');
+        $('#one > .table > li').click(function(){
           Game.makeDefend(jqReference,$(this).children());
         })
       }
@@ -134,7 +138,7 @@ var Game = function(){
     makeDefend: function(jqRefAttackCard,jqRefChosenCard) {
       //When attacked, the other player must defend with a card of his choosing.
       //Inputs: attacking card (from Game.makeAttack()) and card selected by the player to defend.
-
+      console.log('DEFEND!!');
       var atkCardSuit = jqRefAttackCard.attr('class');
       atkCardSuit = atkCardSuit.split(' ');
       atkCardSuit = atkCardSuit[atkCardSuit.length-1];
@@ -160,38 +164,46 @@ var Game = function(){
         alert('choose another card!');
       }
     },
+
     recover: function() {
       console.log('recovering from turn');
 
-      for (var i = 1; i < 3; i++){
-        while (Game.players[i].hand.length > 7) {
-          Game.players[i].draw();
-        }
+      while ($('#one > .table').children().length < 6) {
+        Game.players[0].draw();
       }
+      while($('#two > .table').children().length < 6) {
+        Game.players[1].draw();
+      }
+      $('#two > .table').children().off('click');
+      $('#one > .table').children().off('click');
+      Game.setTurn(Game.getTurn());
+      Game.render.listeners();
     },
+
     render: {
       players: function(){
-      //render players hands:
-      for (var i = 0; i < Game.players[0].hand.length; i++) {
-        $('#one > .table').append($('<li/>').append(Game.players[0].hand[i].jqCard));
-      }
-      for (var i = 0; i < Game.players[1].hand.length; i++) {
-        $('#two > .table').append($('<li/>').append(Game.players[1].hand[i].jqCard));
-      }
-
+        //render players hands:
+        for (var i = 0; i < Game.players[0].hand.length; i++) {
+          $('#one > .table').append($('<li/>').append(Game.players[0].hand[i].jqCard));
+        }
+        for (var i = 0; i < Game.players[1].hand.length; i++) {
+          $('#two > .table').append($('<li/>').append(Game.players[1].hand[i].jqCard));
+        }
+      },
+      listeners: function(){
       //Every time game is refreshed, update event listeners.
       if (Game.getTurn()===1){
         $('#one > .table > li').click(function(){
           Game.makeAttack($(this).children());
         })
         //  MAYBE HERE SET AN EVENT LISTENER INSIDE MAKE ATTACK!!?!?!?
-        $('#two > .table > li').off('click');
+        $('#two > .table').children().off('click');
       }
       else if (Game.getTurn()===2) {
         $('#two > .table > li').click(function(){
           Game.makeAttack($(this).children());
         })
-        $('#one > .table > li').off('click');
+        $('#one > .table').children().off('click');
       }
 
       //Say what the trump suit is:
@@ -220,8 +232,16 @@ var Game = function(){
     console.log('drawing a card');
       if (Game.deck.cards.length != 0) {
       $('#draw li:last').remove();
-      this.hand.push(Game.deck.cards.pop());
-      Game.render.players();
+      //this.hand.push(Game.deck.cards.pop());
+      var newLi = $('<li/>');
+        if (this.number === 1) {
+          $('#one > .table').append(newLi.append(Game.deck.cards.pop().jqCard));
+        }
+        else if (this.number === 2) {
+          $('#two > .table').append(newLi.append(Game.deck.cards.pop().jqCard));
+        }
+
+      //Game.render.players();
       console.log('Deck now has '+ Game.deck.cards.length + ' cards');
     }
   }
