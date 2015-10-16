@@ -5,10 +5,20 @@ div {
 header {
   height: 200px;
 }
+button {
+  width: 120px;
+  height: 20px;
+  margin: 10px;
+}
+
 footer {
   height: 200px;
 }
-
+.sidebar {
+  width: 150px;
+  height:599px;
+  float: left;
+}
 .container {
   border: solid black 2px;
   height: 600px;
@@ -18,7 +28,8 @@ footer {
 
 .player {
   height: 30px;
-  margin-bottom: 200px;
+  margin-bottom:200px;
+  width: 770px;
 }
 
 .field {
@@ -27,12 +38,17 @@ footer {
   width:50px;
   display: inline-block;
 }
+.inner {
+  float: right;
+  margin-top: -700px;
+}
 
 #draw{
-  margin-top: 200px;
+  margin-top: 180px;
+  margin-bottom: 180px;
   border: solid black 2px;
   width: 20px;
-  float:left;
+  height:50px;
 }
 
 #table {
@@ -41,4 +57,11 @@ footer {
   width: 1200px;
   margin-left: 30px;
   /*min-width: 600px;*/
+}
+
+#discard {
+  margin: 250px 70px;
+  border: solid black 2px;
+  width: 20px;
+  height: 50px;
 }

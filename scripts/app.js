@@ -142,21 +142,27 @@ var Game = function(){
       defCardSuit = defCardSuit.split(' ');
       defCardSuit = defCardSuit[defCardSuit.length-1];
 
-      if (atkCardSuit != Game.trumpSuit) {
-        if ((atkCardSuit === defCardSuit) &&
-        (parseInt(jqRefAttackCard.attr('data-value')) < parseInt(jqRefChosenCard.attr('data-value')))) {
-          console.log('correct card selected');
-          $('.player#field > .hand').append(jqRefChosenCard.parent());
-
-        }
-        else if (defCardSuit === Game.trumpSuit) {
-          console.log('correct card selected');
-          $('.player#field > .hand').append(jqRefChosenCard.parent());
+      if (atkCardSuit === defCardSuit) {
+        if (parseInt(jqRefAttackCard.attr('data-value')) < parseInt(jqRefChosenCard.attr('data-value'))) {
+//-->Defending player has beaten the attacking card.
+        $('.player#field > .hand').append(jqRefChosenCard.parent());
+        Game.recover();
         }
         else {
           alert('choose another card!');
         }
       }
+      else if (defCardSuit === Game.trumpSuit) {
+//-->Defending player has beaten the attacking card.
+        $('.player#field > .hand').append(jqRefChosenCard.parent());
+        Game.recover();
+      }
+      else {
+        alert('choose another card!');
+      }
+    },
+    recover: function() {
+      console.log('recovering from turn');
     },
     render: {
       players: function(){
