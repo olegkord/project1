@@ -11,32 +11,37 @@ footer {
 
 .container {
   border: solid black 2px;
-  position: absolute;
+  height: 600px;
+  width: 1000px;
+  float: right;
 }
 
 .player {
-  Width: 1020px;
+
   height: 30px;
-  margin-left: 250px;
 }
 
 #draw{
-  margin: 60px 10px;
+  margin-top: 200px;
   border: solid black 2px;
-  width: 0px;
+  width: 20px;
   float:left;
 }
 
 #table {
   background-color: lightgreen;
-  height: 1000px;
-  width: 1600px;
-  min-width: 600px;
+  height: 750px;
+  width: 1200px;
+  margin-left: 30px;
+  /*min-width: 600px;*/
 }
 
 #field {
-  margin: 250px -500px;
+  margin: 0;
   width:30px;
   display: inline-block;
+}
 
+#one {
+  margin-top: 400px;
 }
