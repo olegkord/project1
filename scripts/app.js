@@ -79,8 +79,14 @@ var Game = function(){
       Game.deck.build();
     },
 
-    checkWin: function(player) {
+    checkWin: function() {
       //This function will determine if any of the players has won.
+      if ((Game.deck.cards.length === 0)&&(($('.player#one > .table').children().length===0)||($('.player#two > .table').children().length===0))){ //<--- funny face before text is put in.
+        return true;
+      }
+      else {
+        return false;
+      }
     },
 
     deal: function(deck) {
@@ -157,11 +163,13 @@ var Game = function(){
       defCardSuit = defCardSuit.split(' ');
       defCardSuit = defCardSuit[defCardSuit.length-1];
 
+      var cardRank = parseInt(jqRefChosenCard.attr('data-value'));
+
       if (atkCardSuit === defCardSuit) {
-        if (parseInt(jqRefAttackCard.attr('data-value')) < parseInt(jqRefChosenCard.attr('data-value'))) {
-          Game.numOnField.push(parseInt(jqRefChosenCard.attr('data-value')));
+        if (parseInt(jqRefAttackCard.attr('data-value')) < cardRank) {
 //-->Defending player has beaten the attacking card.
         $('.player.field > .hand').eq(Game.numPairs).append(jqRefChosenCard.parent());
+        Game.numOnField.push(cardRank);
         Game.numPairs++;
         Game.render.listeners();
         }
@@ -172,6 +180,7 @@ var Game = function(){
       else if (defCardSuit === Game.trumpSuit) {
 //-->Defending player has beaten the attacking card.
         $('.player.field > .hand').eq(Game.numPairs).append(jqRefChosenCard.parent());
+        Game.numOnField.push(cardRank);
         Game.numPairs++;
         Game.render.listeners();
       }
@@ -182,20 +191,26 @@ var Game = function(){
 
     recover: function() {
       console.log('recovering from turn');
-
-      while ($('#one > .table').children().length < 6) {
-        Game.players[0].draw();
+      if (Game.checkWin()){
+        alert('Game Over!!');
       }
-      while($('#two > .table').children().length < 6) {
-        Game.players[1].draw();
+      else {
+        if (Game.deck.cards.length != 0) {
+          while ($('#one > .table').children().length < 6) {
+            Game.players[0].draw();
+          }
+          while($('#two > .table').children().length < 6) {
+            Game.players[1].draw();
+          }
+        }
+        $('#two > .table').children().off('click');
+        $('#one > .table').children().off('click');
+        $('.player#center').children().remove();
+        Game.numPairs = 0;
+        Game.numOnField = [];
+        Game.setTurn(Game.getTurn());
+        Game.render.listeners();
       }
-      $('#two > .table').children().off('click');
-      $('#one > .table').children().off('click');
-      $('.player#center').children().remove();
-      Game.numPairs = 0;
-      Game.numOnField = [];
-      Game.setTurn(Game.getTurn());
-      Game.render.listeners();
     },
 
     render: {
@@ -248,20 +263,18 @@ var Game = function(){
   this.draw = function() {
     //draws a card fromt he deck and adds to the hand.
     console.log('drawing a card');
-      if (Game.deck.cards.length != 0) {
-      $('#draw li:last').remove();
-      //this.hand.push(Game.deck.cards.pop());
-      var newLi = $('<li/>');
-        if (this.number === 1) {
-          $('#one > .table').append(newLi.append(Game.deck.cards.pop().jqCard));
-        }
-        else if (this.number === 2) {
-          $('#two > .table').append(newLi.append(Game.deck.cards.pop().jqCard));
-        }
 
-      //Game.render.players();
-      console.log('Deck now has '+ Game.deck.cards.length + ' cards');
-    }
+    $('#draw li:last').remove();
+    //this.hand.push(Game.deck.cards.pop());
+    var newLi = $('<li/>');
+      if (this.number === 1) {
+        $('#one > .table').append(newLi.append(Game.deck.cards.pop().jqCard));
+      }
+      else if (this.number === 2) {
+        $('#two > .table').append(newLi.append(Game.deck.cards.pop().jqCard));
+      }
+    //Game.render.players();
+    console.log('Deck now has '+ Game.deck.cards.length + ' cards');
   }
 };
 
