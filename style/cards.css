@@ -468,6 +468,7 @@
     /*margin-bottom: 3.5em;*/
     /*position: absolute;*/
     position: relative;
+    margin-top: -50px;
     /*margin-left: 160px;*/
 }
 .playingCards ul.table li,

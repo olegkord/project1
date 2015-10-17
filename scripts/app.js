@@ -31,6 +31,9 @@ var Game = function(){
     trumpSuit: '',
     players: [],
 
+    numOnField: [],
+    numPairs: 0,
+
     getState: function() {
       return {
         deck: Game.deck.cards,
@@ -104,35 +107,42 @@ var Game = function(){
 
     makeAttack: function(jqReference){
       //Every other turn a player attacks the other player with a card.
+
+      //if the numOnField array is empty OR the card exists on the field.
       var cardRank = parseInt(jqReference.attr('data-value'));
+      if ((Game.numOnField==false)||Game.numOnField.includes(cardRank)){
+        //Store card rank:
+        Game.numOnField.push(cardRank);
 
-      var cardSuit = jqReference.attr('class');
-      cardSuit = cardSuit.split(' ');
-      cardSuit = cardSuit[cardSuit.length-1];
+        var cardSuit = jqReference.attr('class');
+        cardSuit = cardSuit.split(' ');
+        cardSuit = cardSuit[cardSuit.length-1];
 
-      //player field already exists.
-      $('.player#field').append($('<ul/>').addClass('hand').append(jqReference.parent()));
+        //player field already exists.
+        var newField = $('.player#center').append($('<div/>').addClass('player').addClass('field').attr('id',Game.numPairs.toString()));
+        newField = newField.children().eq(Game.numPairs);
+        newField = newField.append($('<ul/>').addClass('hand').append(jqReference.parent()));
 
-      if (Game.getTurn() === 1) {
-        //if Player 1 just attacked, prevent him from going again.
-//------->MODIFIY WITH MORE ADVANCED RULES LATER!!!
+        if (Game.getTurn() === 1) {
+          //if Player 1 just attacked, prevent him from going again.
+  //------->MODIFIY WITH MORE ADVANCED RULES LATER!!!
 
-      //Switch event listeners to allow other player to respond to the attack.
-        $('#one > .table').children().off('click');
-        $('#two > .table').children().click(function(){
-          Game.makeDefend(jqReference,$(this).children());
-        })
+        //Switch event listeners to allow other player to respond to the attack.
+          $('#one > .table').children().off('click');
+          $('#two > .table').children().click(function(){
+            Game.makeDefend(jqReference,$(this).children());
+          })
+        }
+        else if (Game.getTurn() === 2) {
+          $('#two > .table > li').off('click');
+          $('#one > .table > li').click(function(){
+            Game.makeDefend(jqReference,$(this).children());
+          })
+        }
       }
-      else if (Game.getTurn() === 2) {
-        $('#two > .table > li').off('click');
-        $('#one > .table > li').click(function(){
-          Game.makeDefend(jqReference,$(this).children());
-        })
+      else {
+        alert('Card can\'t be played!');
       }
-//SWITCH TURN AFTER DEFENCE IS DONE.
-//------->Game.setTurn(Game.getTurn());
-
-      //Game.render.players();
     },
 
     makeDefend: function(jqRefAttackCard,jqRefChosenCard) {
@@ -149,9 +159,10 @@ var Game = function(){
 
       if (atkCardSuit === defCardSuit) {
         if (parseInt(jqRefAttackCard.attr('data-value')) < parseInt(jqRefChosenCard.attr('data-value'))) {
-
+          Game.numOnField.push(parseInt(jqRefChosenCard.attr('data-value')));
 //-->Defending player has beaten the attacking card.
-        $('.player#field > .hand').append(jqRefChosenCard.parent());
+        $('.player.field > .hand').eq(Game.numPairs).append(jqRefChosenCard.parent());
+        Game.numPairs++;
         Game.render.listeners();
         }
         else {
@@ -160,7 +171,8 @@ var Game = function(){
       }
       else if (defCardSuit === Game.trumpSuit) {
 //-->Defending player has beaten the attacking card.
-        $('.player#field > .hand').append(jqRefChosenCard.parent());
+        $('.player.field > .hand').eq(Game.numPairs).append(jqRefChosenCard.parent());
+        Game.numPairs++;
         Game.render.listeners();
       }
       else {
@@ -179,6 +191,9 @@ var Game = function(){
       }
       $('#two > .table').children().off('click');
       $('#one > .table').children().off('click');
+      $('.player#center').children().remove();
+      Game.numPairs = 0;
+      Game.numOnField = [];
       Game.setTurn(Game.getTurn());
       Game.render.listeners();
     },
@@ -327,8 +342,8 @@ var RegisterListeners = function() {
     setEvents: function() {
       $('.discard').click(function() {
 //----->THIS CONDITION WILL CHANGE!!
-        if ($('#field > .hand').children().length > 1) {
-          $('.deck#discard').append($('#field > .hand').children());
+        if ($('.field > .hand').children().length > 1) {
+          $('.deck#discard').append($('.field > .hand').children());
           Game.recover();
         }
         else {
@@ -336,18 +351,18 @@ var RegisterListeners = function() {
         }
       });
       $('.take').click(function() {
-        if (($('#field > .hand').children().length % 2) === 1) {
+        if (($('.field > .hand').children().length % 2) === 1) {
           //if the number of cards in the field is ODD (meaning that there exists an unbeaten pair), add it to player 2 hand.
 //----->BUG: POSSIBLE TO NOT BE ABLE TO TAKE 2 CARDS, HOWEVER THIS IS NOT FUNCTIONAL YET.
           switch (Game.getTurn()) {
             case 1 :
-            $('#two > .table').append($('#field > .hand').children());
+            $('#two > .table').append($('.field > .hand').children());
             Game.setTurn(1);
             Game.recover();
             break;
 
             case 2 :
-            $('#one > .table').append($('#field > .hand').children());
+            $('#one > .table').append($('.field > .hand').children());
             Game.setTurn(2);
             Game.recover();
             break;
@@ -357,3 +372,32 @@ var RegisterListeners = function() {
     }
   }
 }();
+
+if (!Array.prototype.includes) {
+  Array.prototype.includes = function(searchElement /*, fromIndex*/ ) {
+    'use strict';
+    var O = Object(this);
+    var len = parseInt(O.length) || 0;
+    if (len === 0) {
+      return false;
+    }
+    var n = parseInt(arguments[1]) || 0;
+    var k;
+    if (n >= 0) {
+      k = n;
+    } else {
+      k = len + n;
+      if (k < 0) {k = 0;}
+    }
+    var currentElement;
+    while (k < len) {
+      currentElement = O[k];
+      if (searchElement === currentElement ||
+         (searchElement !== searchElement && currentElement !== currentElement)) {
+        return true;
+      }
+      k++;
+    }
+    return false;
+  };
+}
