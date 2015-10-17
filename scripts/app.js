@@ -149,8 +149,10 @@ var Game = function(){
 
       if (atkCardSuit === defCardSuit) {
         if (parseInt(jqRefAttackCard.attr('data-value')) < parseInt(jqRefChosenCard.attr('data-value'))) {
+
 //-->Defending player has beaten the attacking card.
         $('.player#field > .hand').append(jqRefChosenCard.parent());
+        Game.render.listeners();
         }
         else {
           alert('choose another card!');
@@ -159,6 +161,7 @@ var Game = function(){
       else if (defCardSuit === Game.trumpSuit) {
 //-->Defending player has beaten the attacking card.
         $('.player#field > .hand').append(jqRefChosenCard.parent());
+        Game.render.listeners();
       }
       else {
         alert('choose another card!');
@@ -322,9 +325,8 @@ var RegisterListeners = function() {
 
   return {
     setEvents: function() {
-      $('.discard').click(function(){
+      $('.discard').click(function() {
 //----->THIS CONDITION WILL CHANGE!!
-        console.log('discarding cards to discard deck');
         if ($('#field > .hand').children().length > 1) {
           $('.deck#discard').append($('#field > .hand').children());
           Game.recover();
@@ -332,7 +334,26 @@ var RegisterListeners = function() {
         else {
           alert('Insufficient cards are in play!!');
         }
-      })
-    },
+      });
+      $('.take').click(function() {
+        if (($('#field > .hand').children().length % 2) === 1) {
+          //if the number of cards in the field is ODD (meaning that there exists an unbeaten pair), add it to player 2 hand.
+//----->BUG: POSSIBLE TO NOT BE ABLE TO TAKE 2 CARDS, HOWEVER THIS IS NOT FUNCTIONAL YET.
+          switch (Game.getTurn()) {
+            case 1 :
+            $('#two > .table').append($('#field > .hand').children());
+            Game.setTurn(1);
+            Game.recover();
+            break;
+
+            case 2 :
+            $('#one > .table').append($('#field > .hand').children());
+            Game.setTurn(2);
+            Game.recover();
+            break;
+          }
+        }
+      });
+    }
   }
 }();
